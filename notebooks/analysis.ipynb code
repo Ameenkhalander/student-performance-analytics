@@ -1,0 +1,90 @@
+# Student Performance Analytics Notebook
+
+# STEP 1: Import Libraries
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# STEP 2: Load Dataset
+df = pd.read_csv("../data/students.csv")
+
+# STEP 3: Show First 10 Rows
+print("First 10 Records")
+print(df.head(10))
+
+# STEP 4: Dataset Information
+print("\nDataset Info")
+print(df.info())
+
+# STEP 5: Basic Statistics
+print("\nStatistics")
+print(df.describe())
+
+# STEP 6: Total Students
+print("\nTotal Students:", len(df))
+
+# STEP 7: Average Marks
+print("Average Marks:", df["Marks"].mean())
+
+# STEP 8: Highest Marks
+print("Highest Marks:", df["Marks"].max())
+
+# STEP 9: Lowest Marks
+print("Lowest Marks:", df["Marks"].min())
+
+# STEP 10: Top 5 Students
+top_students = df.sort_values(by="Marks", ascending=False).head(5)
+print("\nTop 5 Students")
+print(top_students)
+
+# STEP 11: Pass / Fail
+df["Result"] = df["Marks"].apply(lambda x: "Pass" if x >= 40 else "Fail")
+
+print("\nPass / Fail Count")
+print(df["Result"].value_counts())
+
+# STEP 12: Grade Calculation
+def grade(mark):
+    if mark >= 90:
+        return "A+"
+    elif mark >= 80:
+        return "A"
+    elif mark >= 70:
+        return "B"
+    elif mark >= 60:
+        return "C"
+    else:
+        return "D"
+
+df["Grade"] = df["Marks"].apply(grade)
+
+print("\nGrade Distribution")
+print(df["Grade"].value_counts())
+
+# STEP 13: Bar Chart - Student Marks
+plt.figure(figsize=(14,6))
+plt.bar(df["Name"], df["Marks"])
+plt.xticks(rotation=90)
+plt.title("Student Marks")
+plt.xlabel("Student Name")
+plt.ylabel("Marks")
+plt.tight_layout()
+plt.show()
+
+# STEP 14: Pie Chart - Grades
+df["Grade"].value_counts().plot(kind="pie", autopct="%1.1f%%", figsize=(7,7))
+plt.title("Grade Distribution")
+plt.ylabel("")
+plt.show()
+
+# STEP 15: Histogram - Marks
+plt.figure(figsize=(8,5))
+plt.hist(df["Marks"], bins=10, edgecolor="black")
+plt.title("Marks Distribution")
+plt.xlabel("Marks")
+plt.ylabel("Number of Students")
+plt.show()
+
+# STEP 16: Save Updated Dataset
+df.to_csv("../data/students_updated.csv", index=False)
+
+print("\nUpdated dataset saved as students_updated.csv")
